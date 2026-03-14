@@ -11,6 +11,7 @@ import {
   BookOpen,
   BarChart3,
   RefreshCw,
+  Settings as SettingsIcon,
   Sparkles,
   Menu,
   X,
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
   { href: "/planner", label: "Study Planner", icon: BookOpen, emoji: "📚" },
   { href: "/balance", label: "Workload Balance", icon: BarChart3, emoji: "⚖️" },
   { href: "/missed", label: "Missed Sessions", icon: RefreshCw, emoji: "🔄" },
+  { href: "/settings", label: "Settings", icon: SettingsIcon, emoji: "⚙️" },
 ];
 
 const MOTIVATIONAL_QUOTES = [

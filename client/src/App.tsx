@@ -9,6 +9,7 @@ import WeeklySchedule from "./pages/WeeklySchedule";
 import StudyPlanner from "./pages/StudyPlanner";
 import WorkloadBalance from "./pages/WorkloadBalance";
 import MissedSessions from "./pages/MissedSessions";
+import Settings from "./pages/Settings";
 import AppLayout from "./components/AppLayout";
 
 function Router() {
@@ -20,6 +21,7 @@ function Router() {
         <Route path="/planner" component={StudyPlanner} />
         <Route path="/balance" component={WorkloadBalance} />
         <Route path="/missed" component={MissedSessions} />
+        <Route path="/settings" component={Settings} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
