@@ -9,8 +9,19 @@ interface ScheduleEvent {
   title: string;
   time: string;
   duration: number;
-  type: "class" | "study" | "personal" | "break";
+  type: "class" | "study" | "personal" | "break" | "extracurricular" | "event";
   emoji: string;
+  color: string;
+}
+
+interface RecurringEvent {
+  id: string;
+  name: string;
+  type: "extracurricular" | "event";
+  emoji: string;
+  startTime: string;
+  endTime: string;
+  daysOfWeek: number[];
   color: string;
 }
 
@@ -54,8 +65,70 @@ const SCHEDULE_DATA: Record<string, ScheduleEvent[]> = {
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+// Mock recurring events from Settings
+const RECURRING_EVENTS: RecurringEvent[] = [
+  {
+    id: "e1",
+    name: "Basketball Practice",
+    type: "extracurricular",
+    emoji: "🏀",
+    startTime: "18:00",
+    endTime: "19:30",
+    daysOfWeek: [1, 3, 5], // Mon, Wed, Fri
+    color: "#c9956f",
+  },
+  {
+    id: "e2",
+    name: "Lab Session",
+    type: "event",
+    emoji: "🔬",
+    startTime: "14:00",
+    endTime: "16:00",
+    daysOfWeek: [2, 4], // Tue, Thu
+    color: "#5a8f7b",
+  },
+];
+
+const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+// Helper function to add recurring events to schedule
+function getScheduleWithRecurringEvents(): Record<string, ScheduleEvent[]> {
+  const schedule = { ...SCHEDULE_DATA };
+  
+  RECURRING_EVENTS.forEach((event) => {
+    event.daysOfWeek.forEach((dayIndex: number) => {
+      const dayName = DAYS_OF_WEEK[dayIndex];
+      if (dayName && schedule[dayName]) {
+        // Convert time to minutes for sorting
+        const [hours, minutes] = event.startTime.split(":").map(Number);
+        const startMinutes = hours * 60 + minutes;
+        
+        const scheduleEvent: ScheduleEvent = {
+          id: `${event.id}-${dayName}`,
+          title: event.name,
+          time: event.startTime,
+          duration: (parseInt(event.endTime.split(":")[0]) * 60 + parseInt(event.endTime.split(":")[1])) - startMinutes,
+          type: event.type,
+          emoji: event.emoji,
+          color: event.color,
+        };
+        
+        schedule[dayName].push(scheduleEvent);
+        schedule[dayName].sort((a, b) => {
+          const aTime = parseInt(a.time.split(":")[0]) * 60 + parseInt(a.time.split(":")[1]);
+          const bTime = parseInt(b.time.split(":")[0]) * 60 + parseInt(b.time.split(":")[1]);
+          return aTime - bTime;
+        });
+      }
+    });
+  });
+  
+  return schedule;
+}
+
 export default function WeeklySchedule() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const scheduleWithEvents = getScheduleWithRecurringEvents();
 
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-6xl">
@@ -144,7 +217,7 @@ export default function WeeklySchedule() {
             {selectedDay}'s Schedule
           </h3>
           <div className="space-y-3">
-            {SCHEDULE_DATA[selectedDay]?.map((event) => (
+            {scheduleWithEvents[selectedDay]?.map((event) => (
               <div
                 key={event.id}
                 className="flex items-start gap-4 p-4 rounded-lg"
