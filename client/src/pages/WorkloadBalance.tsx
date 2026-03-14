@@ -1,9 +1,9 @@
 /**
- * WorkloadBalance — StateFlow Zen-Minimalist
- * Prevent burnout with balance alerts, wellness trends, and burnout prevention tips.
+ * WorkloadBalance — StateFlow Soft Minimalism + Japandi
+ * Frosted glass cards, Lora headings, Poppins body, sage/terracotta/slate palette.
  */
 import { BarChart, Bar, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { AlertCircle, TrendingUp, Leaf, Zap } from "lucide-react";
+import { AlertCircle, Leaf } from "lucide-react";
 
 const WEEKLY_HOURS = [
   { day: "Mon", planned: 5, actual: 5 },
@@ -25,11 +25,11 @@ const TREND_DATA = [
 ];
 
 const SUBJECT_LOAD = [
-  { subject: "Organic Chem", emoji: "⚗️", hours: 4.5, target: 6, color: "#D4A574" },
-  { subject: "Biology", emoji: "🧬", hours: 5.5, target: 8, color: "#9B8FA6" },
-  { subject: "Calculus II", emoji: "∫", hours: 2.5, target: 3, color: "#7FA8B8" },
-  { subject: "Physics", emoji: "⚡", hours: 1.5, target: 6, color: "#A89B8B" },
-  { subject: "English Comp", emoji: "✍️", hours: 2, target: 2, color: "#6B8E7F" },
+  { subject: "Organic Chem", emoji: "⚗️", hours: 4.5, target: 6, color: "#c9956f" },
+  { subject: "Biology", emoji: "🧬", hours: 5.5, target: 8, color: "#8b7a6b" },
+  { subject: "Calculus II", emoji: "∫", hours: 2.5, target: 3, color: "#5a8f7b" },
+  { subject: "Physics", emoji: "⚡", hours: 1.5, target: 6, color: "#6b8f7f" },
+  { subject: "English Comp", emoji: "✍️", hours: 2, target: 2, color: "#5a8f7b" },
 ];
 
 const ALERTS = [
@@ -77,10 +77,10 @@ export default function WorkloadBalance() {
     <div className="p-6 lg:p-8 space-y-8 max-w-6xl">
       {/* Header */}
       <div className="animate-fade-up">
-        <h2 className="text-3xl font-bold" style={{ fontFamily: "'Outfit', sans-serif", color: "#2C2C2C" }}>
+        <h2 className="text-3xl font-bold" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
           Workload Balance
         </h2>
-        <p className="mt-2 text-sm" style={{ color: "#6B6B6B", fontFamily: "'Nunito', sans-serif" }}>
+        <p className="mt-2 text-sm" style={{ fontFamily: "'Poppins', sans-serif", color: "#6b6b6b", fontWeight: 300 }}>
           Keeping your study load sustainable — because rest is part of the process too 🌱
         </p>
       </div>
@@ -88,27 +88,28 @@ export default function WorkloadBalance() {
       {/* Key metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-up-delay-1">
         {[
-          { label: "Balance Score", value: "82", unit: "/100", color: "#6B8E7F" },
-          { label: "Planned Hours", value: "25h", unit: "this week", color: "#D4A574" },
-          { label: "Completed Hours", value: "17.5h", unit: "70% done", color: "#7FA8B8" },
-          { label: "Daily Average", value: "3.5h", unit: "weekdays", color: "#9B8FA6" },
-          { label: "Rest Days", value: "2", unit: "Sat + Sun protected", color: "#6B8E7F" },
+          { label: "Balance Score", value: "82", unit: "/100", color: "#5a8f7b" },
+          { label: "Planned Hours", value: "25h", unit: "this week", color: "#c9956f" },
+          { label: "Completed Hours", value: "17.5h", unit: "70% done", color: "#8b7a6b" },
+          { label: "Daily Average", value: "3.5h", unit: "weekdays", color: "#5a8f7b" },
+          { label: "Rest Days", value: "2", unit: "Sat + Sun protected", color: "#6b8f7f" },
         ].map((metric, idx) => (
           <div
             key={idx}
-            className="glass-card rounded-2xl p-4"
+            className="rounded-lg p-4"
             style={{
-              background: "rgba(250, 250, 248, 0.7)",
-              border: "1px solid rgba(107, 142, 127, 0.1)",
+              background: "rgba(255, 255, 255, 0.4)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid rgba(255, 255, 255, 0.6)",
             }}
           >
-            <p className="text-xs mb-1" style={{ color: "#8B8B8B", fontFamily: "'Nunito', sans-serif" }}>
+            <p className="text-xs mb-1" style={{ fontFamily: "'Poppins', sans-serif", color: "#8b8b8b", fontWeight: 300 }}>
               {metric.label}
             </p>
-            <p className="text-2xl font-bold" style={{ color: metric.color, fontFamily: "'Outfit', sans-serif" }}>
+            <p className="text-2xl font-bold" style={{ fontFamily: "'Lora', serif", color: metric.color }}>
               {metric.value}
             </p>
-            <p className="text-xs mt-1" style={{ color: "#8B8B8B", fontFamily: "'Nunito', sans-serif" }}>
+            <p className="text-xs mt-1" style={{ fontFamily: "'Poppins', sans-serif", color: "#8b8b8b", fontWeight: 300 }}>
               {metric.unit}
             </p>
           </div>
@@ -117,34 +118,35 @@ export default function WorkloadBalance() {
 
       {/* Balance alerts */}
       <div className="space-y-3 animate-fade-up-delay-2">
-        <h3 className="text-lg font-bold" style={{ fontFamily: "'Outfit', sans-serif", color: "#2C2C2C" }}>
+        <h3 className="text-lg font-bold" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
           Balance Alerts
         </h3>
         {ALERTS.map((alert) => (
           <div
             key={alert.id}
-            className="glass-card rounded-2xl p-4 flex items-start gap-4"
+            className="rounded-lg p-4 flex items-start gap-4"
             style={{
               background:
                 alert.type === "warning"
-                  ? "rgba(212, 165, 116, 0.08)"
+                  ? "rgba(201, 149, 111, 0.08)"
                   : alert.type === "success"
-                    ? "rgba(107, 142, 127, 0.08)"
-                    : "rgba(127, 168, 184, 0.08)",
+                    ? "rgba(90, 143, 123, 0.08)"
+                    : "rgba(107, 143, 127, 0.08)",
               border:
                 alert.type === "warning"
-                  ? "1px solid rgba(212, 165, 116, 0.2)"
+                  ? "1px solid rgba(201, 149, 111, 0.2)"
                   : alert.type === "success"
-                    ? "1px solid rgba(107, 142, 127, 0.2)"
-                    : "1px solid rgba(127, 168, 184, 0.2)",
+                    ? "1px solid rgba(90, 143, 123, 0.2)"
+                    : "1px solid rgba(107, 143, 127, 0.2)",
+              backdropFilter: "blur(8px)",
             }}
           >
-            <span className="text-xl flex-shrink-0">{alert.emoji}</span>
+            <span className="text-lg flex-shrink-0">{alert.emoji}</span>
             <div className="flex-1 min-w-0">
-              <p className="font-bold text-sm" style={{ fontFamily: "'Outfit', sans-serif", color: "#2C2C2C" }}>
+              <p className="font-bold text-sm" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
                 {alert.title}
               </p>
-              <p className="text-xs mt-1" style={{ color: "#6B6B6B", fontFamily: "'Nunito', sans-serif" }}>
+              <p className="text-xs mt-1" style={{ fontFamily: "'Poppins', sans-serif", color: "#6b6b6b", fontWeight: 300 }}>
                 {alert.description}
               </p>
               {alert.action && (
@@ -153,17 +155,17 @@ export default function WorkloadBalance() {
                   style={{
                     background:
                       alert.type === "warning"
-                        ? "rgba(212, 165, 116, 0.2)"
+                        ? "rgba(201, 149, 111, 0.2)"
                         : alert.type === "success"
-                          ? "rgba(107, 142, 127, 0.2)"
-                          : "rgba(127, 168, 184, 0.2)",
+                          ? "rgba(90, 143, 123, 0.2)"
+                          : "rgba(107, 143, 127, 0.2)",
                     color:
                       alert.type === "warning"
-                        ? "#D4A574"
+                        ? "#c9956f"
                         : alert.type === "success"
-                          ? "#6B8E7F"
-                          : "#7FA8B8",
-                    fontFamily: "'Nunito', sans-serif",
+                          ? "#5a8f7b"
+                          : "#6b8f7f",
+                    fontFamily: "'Poppins', sans-serif",
                   }}
                 >
                   {alert.action}
@@ -178,28 +180,29 @@ export default function WorkloadBalance() {
       <div className="grid lg:grid-cols-2 gap-6 animate-fade-up-delay-2">
         {/* Daily hours chart */}
         <div
-          className="glass-card rounded-2xl p-5"
+          className="rounded-lg p-5"
           style={{
-            background: "rgba(250, 250, 248, 0.7)",
-            border: "1px solid rgba(107, 142, 127, 0.1)",
+            background: "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(255, 255, 255, 0.6)",
           }}
         >
-          <h3 className="font-bold text-sm mb-4" style={{ fontFamily: "'Outfit', sans-serif", color: "#2C2C2C" }}>
+          <h3 className="font-bold text-sm mb-4" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
             Daily Study Hours
           </h3>
           <div style={{ minHeight: 180 }}>
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={WEEKLY_HOURS} barGap={4}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(107, 142, 127, 0.1)" />
-                <XAxis dataKey="day" tick={{ fontSize: 11, fontFamily: "'Nunito', sans-serif", fill: "#8B8B8B" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fontFamily: "'Nunito', sans-serif", fill: "#8B8B8B" }} axisLine={false} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(90, 143, 123, 0.1)" />
+                <XAxis dataKey="day" tick={{ fontSize: 11, fontFamily: "'Poppins', sans-serif", fill: "#8b8b8b" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fontFamily: "'Poppins', sans-serif", fill: "#8b8b8b" }} axisLine={false} tickLine={false} />
                 <Tooltip
-                  contentStyle={{ background: "#FAFAF8", border: "1px solid #E5E5E5", borderRadius: "8px" }}
+                  contentStyle={{ background: "#faf9f6", border: "1px solid #e8e5e0", borderRadius: "8px" }}
                   formatter={(v: number) => [`${v}h`]}
                 />
-                <Bar dataKey="planned" fill="rgba(107, 142, 127, 0.2)" radius={[6, 6, 0, 0]} name="Planned" />
-                <Bar dataKey="actual" fill="#6B8E7F" radius={[6, 6, 0, 0]} name="Actual" />
-                <Legend wrapperStyle={{ fontSize: 11, fontFamily: "'Nunito', sans-serif" }} />
+                <Bar dataKey="planned" fill="rgba(90, 143, 123, 0.2)" radius={[6, 6, 0, 0]} name="Planned" />
+                <Bar dataKey="actual" fill="#5a8f7b" radius={[6, 6, 0, 0]} name="Actual" />
+                <Legend wrapperStyle={{ fontSize: 11, fontFamily: "'Poppins', sans-serif" }} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -207,28 +210,29 @@ export default function WorkloadBalance() {
 
         {/* Trend line chart */}
         <div
-          className="glass-card rounded-2xl p-5"
+          className="rounded-lg p-5"
           style={{
-            background: "rgba(250, 250, 248, 0.7)",
-            border: "1px solid rgba(107, 142, 127, 0.1)",
+            background: "rgba(255, 255, 255, 0.4)",
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(255, 255, 255, 0.6)",
           }}
         >
-          <h3 className="font-bold text-sm mb-4" style={{ fontFamily: "'Outfit', sans-serif", color: "#2C2C2C" }}>
+          <h3 className="font-bold text-sm mb-4" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
             6-Week Wellness Trends
           </h3>
           <div style={{ minHeight: 180 }}>
             <ResponsiveContainer width="100%" height={180}>
               <LineChart data={TREND_DATA}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(107, 142, 127, 0.1)" />
-                <XAxis dataKey="week" tick={{ fontSize: 11, fontFamily: "'Nunito', sans-serif", fill: "#8B8B8B" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fontFamily: "'Nunito', sans-serif", fill: "#8B8B8B" }} axisLine={false} tickLine={false} domain={[0, 100]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(90, 143, 123, 0.1)" />
+                <XAxis dataKey="week" tick={{ fontSize: 11, fontFamily: "'Poppins', sans-serif", fill: "#8b8b8b" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fontFamily: "'Poppins', sans-serif", fill: "#8b8b8b" }} axisLine={false} tickLine={false} domain={[0, 100]} />
                 <Tooltip
-                  contentStyle={{ background: "#FAFAF8", border: "1px solid #E5E5E5", borderRadius: "8px" }}
+                  contentStyle={{ background: "#faf9f6", border: "1px solid #e8e5e0", borderRadius: "8px" }}
                 />
-                <Line type="monotone" dataKey="focus" stroke="#7FA8B8" strokeWidth={2.5} dot={false} name="Focus" />
-                <Line type="monotone" dataKey="balance" stroke="#6B8E7F" strokeWidth={2.5} dot={false} name="Balance" />
-                <Line type="monotone" dataKey="stress" stroke="#A67C7C" strokeWidth={2.5} dot={false} strokeDasharray="4 4" name="Stress" />
-                <Legend wrapperStyle={{ fontSize: 11, fontFamily: "'Nunito', sans-serif" }} />
+                <Line type="monotone" dataKey="focus" stroke="#5a8f7b" strokeWidth={2.5} dot={false} name="Focus" />
+                <Line type="monotone" dataKey="balance" stroke="#c9956f" strokeWidth={2.5} dot={false} name="Balance" />
+                <Line type="monotone" dataKey="stress" stroke="#a67c7c" strokeWidth={2.5} dot={false} strokeDasharray="4 4" name="Stress" />
+                <Legend wrapperStyle={{ fontSize: 11, fontFamily: "'Poppins', sans-serif" }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -237,27 +241,28 @@ export default function WorkloadBalance() {
 
       {/* Subject coverage */}
       <div
-        className="glass-card rounded-2xl p-5 animate-fade-up-delay-2"
+        className="rounded-lg p-5 animate-fade-up-delay-2"
         style={{
-          background: "rgba(250, 250, 248, 0.7)",
-          border: "1px solid rgba(107, 142, 127, 0.1)",
+          background: "rgba(255, 255, 255, 0.4)",
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(255, 255, 255, 0.6)",
         }}
       >
-        <h3 className="font-bold text-sm mb-4" style={{ fontFamily: "'Outfit', sans-serif", color: "#2C2C2C" }}>
+        <h3 className="font-bold text-sm mb-4" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
           Subject Coverage This Week
         </h3>
         <div className="space-y-3">
           {SUBJECT_LOAD.map((subject, idx) => (
             <div key={idx} className="space-y-1">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium" style={{ color: "#2C2C2C", fontFamily: "'Nunito', sans-serif" }}>
+                <p className="text-xs font-medium" style={{ fontFamily: "'Poppins', sans-serif", color: "#2a2a2a" }}>
                   {subject.emoji} {subject.subject}
                 </p>
-                <p className="text-xs" style={{ color: "#8B8B8B", fontFamily: "'Nunito', sans-serif" }}>
+                <p className="text-xs" style={{ fontFamily: "'Poppins', sans-serif", color: "#8b8b8b", fontWeight: 300 }}>
                   {subject.hours}h / {subject.target}h
                 </p>
               </div>
-              <div className="h-2 rounded-full overflow-hidden" style={{ background: "#E5E5E5" }}>
+              <div className="h-2 rounded-full overflow-hidden" style={{ background: "#e8e5e0" }}>
                 <div
                   className="h-full rounded-full transition-all"
                   style={{
@@ -273,21 +278,22 @@ export default function WorkloadBalance() {
 
       {/* Burnout prevention tips */}
       <div
-        className="glass-card rounded-2xl p-5 animate-fade-up-delay-2"
+        className="rounded-lg p-5 animate-fade-up-delay-2"
         style={{
-          background: "rgba(107, 142, 127, 0.08)",
-          border: "1px solid rgba(107, 142, 127, 0.2)",
+          background: "rgba(90, 143, 123, 0.08)",
+          border: "1px solid rgba(90, 143, 123, 0.2)",
+          backdropFilter: "blur(8px)",
         }}
       >
-        <h3 className="font-bold text-sm mb-4 flex items-center gap-2" style={{ fontFamily: "'Outfit', sans-serif", color: "#2C2C2C" }}>
-          <Leaf className="w-4 h-4" style={{ color: "#6B8E7F" }} />
+        <h3 className="font-bold text-sm mb-4 flex items-center gap-2" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
+          <Leaf className="w-4 h-4" style={{ color: "#5a8f7b" }} />
           Burnout Prevention Tips 💚
         </h3>
         <div className="space-y-2">
           {BURNOUT_TIPS.map((tip, idx) => (
             <div key={idx} className="flex items-start gap-2">
-              <span className="text-xs font-bold mt-0.5" style={{ color: "#6B8E7F" }}>✦</span>
-              <p className="text-xs" style={{ color: "#6B6B6B", fontFamily: "'Nunito', sans-serif" }}>
+              <span className="text-xs font-bold mt-0.5" style={{ color: "#5a8f7b" }}>✦</span>
+              <p className="text-xs" style={{ fontFamily: "'Poppins', sans-serif", color: "#6b6b6b", fontWeight: 300 }}>
                 {tip}
               </p>
             </div>
