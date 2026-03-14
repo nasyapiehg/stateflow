@@ -90,35 +90,35 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {NAV_ITEMS.map((item) => {
             const isActive = location === item.href;
             return (
-              <Link key={item.href} href={item.href}>
-                <a
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200"
-                  style={{
-                    background: isActive ? "#E8EDE9" : "transparent",
-                    color: isActive ? "#4A5A52" : "#6B6B6B",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.background = "#F0F0F0";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.background = "transparent";
-                    }
-                  }}
-                >
-                  <span className="text-lg">{item.emoji}</span>
-                  <span className="text-sm font-medium" style={{ fontFamily: "'Nunito', sans-serif" }}>
-                    {item.label}
-                  </span>
-                  {isActive && (
-                    <div
-                      className="ml-auto w-1.5 h-1.5 rounded-full"
-                      style={{ background: "#6B8E7F" }}
-                    />
-                  )}
-                </a>
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 block"
+                style={{
+                  background: isActive ? "#E8EDE9" : "transparent",
+                  color: isActive ? "#4A5A52" : "#6B6B6B",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = "#F0F0F0";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = "transparent";
+                  }
+                }}
+              >
+                <span className="text-lg">{item.emoji}</span>
+                <span className="text-sm font-medium" style={{ fontFamily: "'Nunito', sans-serif" }}>
+                  {item.label}
+                </span>
+                {isActive && (
+                  <div
+                    className="ml-auto w-1.5 h-1.5 rounded-full"
+                    style={{ background: "#6B8E7F" }}
+                  />
+                )}
               </Link>
             );
           })}
