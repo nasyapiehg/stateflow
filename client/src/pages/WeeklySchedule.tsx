@@ -2,7 +2,7 @@
  * WeeklySchedule — StateFlow Soft Minimalism + Japandi
  * Frosted glass cards, Lora headings, Poppins body, sage/terracotta/slate palette.
  */
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 interface ScheduleEvent {
   id: string;
@@ -93,8 +93,14 @@ const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 // Helper function to add recurring events to schedule
 function getScheduleWithRecurringEvents(): Record<string, ScheduleEvent[]> {
-  const schedule = { ...SCHEDULE_DATA };
+  const schedule: Record<string, ScheduleEvent[]> = {};
   
+  // Deep copy SCHEDULE_DATA to avoid mutations
+  Object.keys(SCHEDULE_DATA).forEach((day) => {
+    schedule[day] = [...SCHEDULE_DATA[day]];
+  });
+  
+  let eventCounter = 0;
   RECURRING_EVENTS.forEach((event) => {
     event.daysOfWeek.forEach((dayIndex: number) => {
       const dayName = DAYS_OF_WEEK[dayIndex];
@@ -104,7 +110,7 @@ function getScheduleWithRecurringEvents(): Record<string, ScheduleEvent[]> {
         const startMinutes = hours * 60 + minutes;
         
         const scheduleEvent: ScheduleEvent = {
-          id: `${event.id}-${dayName}`,
+          id: `${event.id}-${dayName}-${eventCounter++}`,
           title: event.name,
           time: event.startTime,
           duration: (parseInt(event.endTime.split(":")[0]) * 60 + parseInt(event.endTime.split(":")[1])) - startMinutes,
@@ -128,7 +134,7 @@ function getScheduleWithRecurringEvents(): Record<string, ScheduleEvent[]> {
 
 export default function WeeklySchedule() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
-  const scheduleWithEvents = getScheduleWithRecurringEvents();
+  const scheduleWithEvents = useMemo(() => getScheduleWithRecurringEvents(), []);
 
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-6xl">
