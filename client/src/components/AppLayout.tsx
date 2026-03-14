@@ -165,14 +165,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
               className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold"
               style={{ background: "#c9956f" }}
             >
-              AJ
+              MJ
             </div>
             <div className="flex-1 min-w-0">
               <p
                 className="text-sm font-600 truncate"
                 style={{ color: "#2a2a2a", fontFamily: "'Lora', serif" }}
               >
-                Alex Johnson
+                Mya Johnson
               </p>
               <p className="text-xs truncate" style={{ color: "#8b8b8b", fontFamily: "'Poppins', sans-serif" }}>
                 Pre-Med · Year 2
