@@ -4,6 +4,9 @@
  * Frosted glass cards, Lora headings, Poppins body, sage/terracotta/slate palette.
  */
 import { CheckCircle2, Flame, Clock } from "lucide-react";
+import { toast } from "sonner";
+import * as React from "react";
+import { useState } from "react";
 
 interface StudyBlock {
   id: string;
@@ -23,6 +26,7 @@ interface Deadline {
   subject: string;
   daysLeft: number;
   color: string;
+  urgency?: "critical" | "warning" | "normal";
 }
 
 const TODAY_BLOCKS: StudyBlock[] = [
@@ -69,9 +73,9 @@ const TODAY_BLOCKS: StudyBlock[] = [
 ];
 
 const UPCOMING_DEADLINES: Deadline[] = [
-  { id: "1", emoji: "📋", title: "Lab Report #6", subject: "Organic Chemistry", daysLeft: 2, color: "#c9956f" },
-  { id: "2", emoji: "📝", title: "Midterm Exam", subject: "Biology", daysLeft: 5, color: "#8b7a6b" },
-  { id: "3", emoji: "📊", title: "Problem Set 7", subject: "Calculus II", daysLeft: 8, color: "#5a8f7b" },
+  { id: "1", emoji: "📋", title: "Lab Report #6", subject: "Organic Chemistry", daysLeft: 2, color: "#c9956f", urgency: "critical" },
+  { id: "2", emoji: "📝", title: "Midterm Exam", subject: "Biology", daysLeft: 5, color: "#8b7a6b", urgency: "warning" },
+  { id: "3", emoji: "📊", title: "Problem Set 7", subject: "Calculus II", daysLeft: 8, color: "#5a8f7b", urgency: "normal" },
 ];
 
 const SUBJECT_LOAD = [
@@ -89,8 +93,25 @@ function getSessionStatus(blockIndex: number, completedCount: number): "now" | "
 }
 
 export default function Dashboard() {
-  const completedCount = TODAY_BLOCKS.filter((b) => b.completed).length;
-  const nextBlock = TODAY_BLOCKS[completedCount];
+  const [blocks, setBlocks] = useState(TODAY_BLOCKS);
+  const completedCount = blocks.filter((b) => b.completed).length;
+  const nextBlock = blocks[completedCount];
+
+  const handleBlockComplete = (blockId: string) => {
+    const updatedBlocks = blocks.map((b) =>
+      b.id === blockId ? { ...b, completed: !b.completed } : b
+    );
+    setBlocks(updatedBlocks);
+    
+    const block = blocks.find((b) => b.id === blockId);
+    if (block && !block.completed) {
+      toast.success(`Great job! ${block.subject} session completed! 🎉`, {
+        description: `You're on fire! Keep up the momentum.`,
+      });
+    } else {
+      toast.info(`Session unmarked`);
+    }
+  };
 
   return (
     <div className="p-6 lg:p-8 space-y-8 max-w-6xl relative">
@@ -206,7 +227,7 @@ export default function Dashboard() {
             Today's Study Blocks
           </h2>
           <div className="space-y-3">
-            {TODAY_BLOCKS.map((block, idx) => {
+            {blocks.map((block, idx) => {
               const status = getSessionStatus(idx, completedCount);
               const isNow = status === "now";
               const isNext = status === "next";
@@ -252,7 +273,8 @@ export default function Dashboard() {
                     </p>
                   </div>
                   <button
-                    className="flex-shrink-0 p-2 rounded-lg transition-all"
+                    onClick={() => handleBlockComplete(block.id)}
+                    className="flex-shrink-0 p-2 rounded-lg transition-all hover:shadow-md"
                     style={{
                       background: block.completed ? "#5a8f7b" : "rgba(90, 143, 123, 0.1)",
                     }}
@@ -318,12 +340,19 @@ export default function Dashboard() {
             </p>
             <div className="space-y-2">
               {UPCOMING_DEADLINES.map((deadline) => {
-                let deadlineColor = "#8b8b8b";
-                if (deadline.daysLeft <= 2) deadlineColor = "#c9956f"; // Red/urgent
-                if (deadline.daysLeft <= 5) deadlineColor = "#c9956f"; // Amber/warning
+                let urgencyColor = "#8b8b8b";
+                let urgencyBg = "transparent";
+                
+                if (deadline.urgency === "critical") {
+                  urgencyColor = "#d97706"; // Amber/orange for critical
+                  urgencyBg = "rgba(217, 119, 6, 0.1)";
+                } else if (deadline.urgency === "warning") {
+                  urgencyColor = "#c9956f"; // Terracotta for warning
+                  urgencyBg = "rgba(201, 149, 111, 0.1)";
+                }
 
                 return (
-                  <div key={deadline.id} className="flex items-start gap-2">
+                  <div key={deadline.id} className="flex items-start gap-2 p-2 rounded" style={{ background: urgencyBg }}>
                     <span className="text-sm flex-shrink-0">{deadline.emoji}</span>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
@@ -333,7 +362,7 @@ export default function Dashboard() {
                         {deadline.subject}
                       </p>
                     </div>
-                    <p className="text-xs font-semibold flex-shrink-0" style={{ fontFamily: "'Poppins', sans-serif", color: deadlineColor }}>
+                    <p className="text-xs font-semibold flex-shrink-0" style={{ fontFamily: "'Poppins', sans-serif", color: urgencyColor }}>
                       {deadline.daysLeft}d
                     </p>
                   </div>
