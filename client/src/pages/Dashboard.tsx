@@ -1,8 +1,9 @@
 /**
  * Dashboard — StateFlow Soft Minimalism + Japandi
+ * Phase 1 Improvements: Reordered sections, Next Up card, top-right streak badge, session status badges
  * Frosted glass cards, Lora headings, Poppins body, sage/terracotta/slate palette.
  */
-import { CheckCircle2, Flame } from "lucide-react";
+import { CheckCircle2, Flame, Clock } from "lucide-react";
 
 interface StudyBlock {
   id: string;
@@ -80,11 +81,38 @@ const SUBJECT_LOAD = [
   { subject: "Physics", emoji: "⚡", hours: 3, target: 6, color: "#6b8f7f" },
 ];
 
+// Helper function to determine session status
+function getSessionStatus(blockIndex: number, completedCount: number): "now" | "next" | "future" {
+  if (blockIndex === completedCount) return "now";
+  if (blockIndex === completedCount + 1) return "next";
+  return "future";
+}
+
 export default function Dashboard() {
+  const completedCount = TODAY_BLOCKS.filter((b) => b.completed).length;
+  const nextBlock = TODAY_BLOCKS[completedCount];
+
   return (
-    <div className="p-6 lg:p-8 space-y-8 max-w-6xl">
+    <div className="p-6 lg:p-8 space-y-8 max-w-6xl relative">
+      {/* Top-right streak badge */}
+      <div className="absolute top-6 right-6 lg:top-8 lg:right-8 animate-fade-up">
+        <div
+          className="rounded-full px-4 py-2 flex items-center gap-2 shadow-md"
+          style={{
+            background: "rgba(255, 255, 255, 0.5)",
+            backdropFilter: "blur(12px)",
+            border: "1px solid rgba(255, 255, 255, 0.6)",
+          }}
+        >
+          <Flame className="w-4 h-4" style={{ color: "#c9956f" }} />
+          <p className="text-sm font-semibold" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
+            7 day
+          </p>
+        </div>
+      </div>
+
       {/* Welcome hero */}
-      <div className="animate-fade-up">
+      <div className="animate-fade-up pr-32 lg:pr-0">
         <h1 className="text-4xl font-bold mb-2" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
           Good evening, Alex! 👋
         </h1>
@@ -92,6 +120,56 @@ export default function Dashboard() {
           You've got 2 study sessions left today. You're doing great!
         </p>
       </div>
+
+      {/* NEXT UP CARD - Primary focus */}
+      {nextBlock && (
+        <div className="animate-fade-up-delay-1">
+          <div
+            className="rounded-lg p-6 flex items-start gap-4 transition-all hover:shadow-lg cursor-pointer border-l-4"
+            style={{
+              background: "rgba(255, 255, 255, 0.5)",
+              backdropFilter: "blur(12px)",
+              border: "1px solid rgba(255, 255, 255, 0.6)",
+              borderLeftColor: nextBlock.color,
+            }}
+          >
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-block px-2 py-1 rounded text-xs font-semibold" style={{ background: "#5a8f7b", color: "#faf9f6" }}>
+                  NEXT UP
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl">{nextBlock.emoji}</span>
+                <p className="text-lg font-bold" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
+                  {nextBlock.subject}
+                </p>
+              </div>
+              <p className="text-sm mb-3" style={{ fontFamily: "'Poppins', sans-serif", color: "#6b6b6b", fontWeight: 300 }}>
+                {nextBlock.topic}
+              </p>
+              <div className="flex items-center gap-4">
+                <p className="text-sm font-semibold" style={{ fontFamily: "'Poppins', sans-serif", color: "#2a2a2a" }}>
+                  {nextBlock.time}
+                </p>
+                <p className="text-xs" style={{ fontFamily: "'Poppins', sans-serif", color: "#8b8b8b", fontWeight: 300 }}>
+                  {nextBlock.duration} min
+                </p>
+              </div>
+            </div>
+            <button
+              className="flex-shrink-0 px-4 py-2 rounded-lg font-semibold transition-all"
+              style={{
+                background: "#5a8f7b",
+                color: "#faf9f6",
+                fontFamily: "'Poppins', sans-serif",
+              }}
+            >
+              Start Timer
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Key metrics */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-up-delay-1">
@@ -122,75 +200,73 @@ export default function Dashboard() {
 
       {/* Main content grid */}
       <div className="grid lg:grid-cols-3 gap-6 animate-fade-up-delay-2">
-        {/* Today's study blocks */}
+        {/* Today's study blocks - PRIMARY SECTION */}
         <div className="lg:col-span-2 space-y-4">
           <h2 className="text-xl font-bold" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
             Today's Study Blocks
           </h2>
           <div className="space-y-3">
-            {TODAY_BLOCKS.map((block) => (
-              <div
-                key={block.id}
-                className="rounded-lg p-4 flex items-start gap-4 transition-all hover:shadow-md cursor-pointer"
-                style={{
-                  background: "rgba(255, 255, 255, 0.4)",
-                  backdropFilter: "blur(12px)",
-                  border: "1px solid rgba(255, 255, 255, 0.6)",
-                }}
-              >
+            {TODAY_BLOCKS.map((block, idx) => {
+              const status = getSessionStatus(idx, completedCount);
+              const isNow = status === "now";
+              const isNext = status === "next";
+
+              return (
                 <div
-                  className="w-1 h-16 rounded-full flex-shrink-0"
-                  style={{ background: block.color }}
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg">{block.emoji}</span>
-                    <p className="font-semibold text-sm" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
-                      {block.subject}
-                    </p>
-                  </div>
-                  <p className="text-xs mb-2" style={{ fontFamily: "'Poppins', sans-serif", color: "#6b6b6b", fontWeight: 300 }}>
-                    {block.topic}
-                  </p>
-                  <p className="text-xs" style={{ fontFamily: "'Poppins', sans-serif", color: "#8b8b8b", fontWeight: 300 }}>
-                    {block.time} · {block.duration} min
-                  </p>
-                </div>
-                <button
-                  className="flex-shrink-0 p-2 rounded-lg transition-all"
+                  key={block.id}
+                  className="rounded-lg p-4 flex items-start gap-4 transition-all hover:shadow-md cursor-pointer border-l-4"
                   style={{
-                    background: block.completed ? "#5a8f7b" : "rgba(90, 143, 123, 0.1)",
+                    background: "rgba(255, 255, 255, 0.4)",
+                    backdropFilter: "blur(12px)",
+                    border: "1px solid rgba(255, 255, 255, 0.6)",
+                    borderLeftColor: isNow ? "#5a8f7b" : isNext ? "#c9956f" : "#e8e5e0",
+                    opacity: block.completed ? 0.6 : 1,
                   }}
                 >
-                  <CheckCircle2 className="w-5 h-5" style={{ color: block.completed ? "#faf9f6" : "#5a8f7b" }} />
-                </button>
-              </div>
-            ))}
+                  <div
+                    className="w-1 h-16 rounded-full flex-shrink-0"
+                    style={{ background: block.color }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      {isNow && (
+                        <span className="inline-block px-2 py-0.5 rounded text-xs font-semibold" style={{ background: "#5a8f7b", color: "#faf9f6" }}>
+                          NOW
+                        </span>
+                      )}
+                      {isNext && (
+                        <span className="inline-block px-2 py-0.5 rounded text-xs font-semibold" style={{ background: "#c9956f", color: "#faf9f6" }}>
+                          NEXT
+                        </span>
+                      )}
+                      <span className="text-lg">{block.emoji}</span>
+                      <p className="font-semibold text-sm" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
+                        {block.subject}
+                      </p>
+                    </div>
+                    <p className="text-xs mb-2" style={{ fontFamily: "'Poppins', sans-serif", color: "#6b6b6b", fontWeight: 300 }}>
+                      {block.topic}
+                    </p>
+                    <p className="text-xs" style={{ fontFamily: "'Poppins', sans-serif", color: "#8b8b8b", fontWeight: 300 }}>
+                      {block.time} · {block.duration} min
+                    </p>
+                  </div>
+                  <button
+                    className="flex-shrink-0 p-2 rounded-lg transition-all"
+                    style={{
+                      background: block.completed ? "#5a8f7b" : "rgba(90, 143, 123, 0.1)",
+                    }}
+                  >
+                    <CheckCircle2 className="w-5 h-5" style={{ color: block.completed ? "#faf9f6" : "#5a8f7b" }} />
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* Right sidebar */}
         <div className="space-y-6">
-          {/* Streak */}
-          <div
-            className="rounded-lg p-5"
-            style={{
-              background: "rgba(255, 255, 255, 0.4)",
-              backdropFilter: "blur(12px)",
-              border: "1px solid rgba(255, 255, 255, 0.6)",
-            }}
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <Flame className="w-5 h-5" style={{ color: "#c9956f" }} />
-              <p className="font-semibold text-sm" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
-                7 day streak 🔥
-              </p>
-            </div>
-            <p className="text-xs" style={{ fontFamily: "'Poppins', sans-serif", color: "#6b6b6b", fontWeight: 300 }}>
-              You're on fire! Keep studying consistently to build momentum.
-            </p>
-          </div>
-
           {/* Weekly progress ring */}
           <div
             className="rounded-lg p-5 text-center"
@@ -241,22 +317,28 @@ export default function Dashboard() {
               Upcoming Deadlines
             </p>
             <div className="space-y-2">
-              {UPCOMING_DEADLINES.map((deadline) => (
-                <div key={deadline.id} className="flex items-start gap-2">
-                  <span className="text-sm flex-shrink-0">{deadline.emoji}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
-                      {deadline.title}
-                    </p>
-                    <p className="text-xs" style={{ fontFamily: "'Poppins', sans-serif", color: "#8b8b8b", fontWeight: 300 }}>
-                      {deadline.subject}
+              {UPCOMING_DEADLINES.map((deadline) => {
+                let deadlineColor = "#8b8b8b";
+                if (deadline.daysLeft <= 2) deadlineColor = "#c9956f"; // Red/urgent
+                if (deadline.daysLeft <= 5) deadlineColor = "#c9956f"; // Amber/warning
+
+                return (
+                  <div key={deadline.id} className="flex items-start gap-2">
+                    <span className="text-sm flex-shrink-0">{deadline.emoji}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold" style={{ fontFamily: "'Lora', serif", color: "#2a2a2a" }}>
+                        {deadline.title}
+                      </p>
+                      <p className="text-xs" style={{ fontFamily: "'Poppins', sans-serif", color: "#8b8b8b", fontWeight: 300 }}>
+                        {deadline.subject}
+                      </p>
+                    </div>
+                    <p className="text-xs font-semibold flex-shrink-0" style={{ fontFamily: "'Poppins', sans-serif", color: deadlineColor }}>
+                      {deadline.daysLeft}d
                     </p>
                   </div>
-                  <p className="text-xs font-semibold flex-shrink-0" style={{ fontFamily: "'Poppins', sans-serif", color: deadline.color }}>
-                    {deadline.daysLeft}d
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
