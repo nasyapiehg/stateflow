@@ -1,0 +1,2 @@
+Designed StateFlow, an AI-powered study planner concept for STEM students juggling heavy workloads and unpredictable schedules. Led the project from research to prototype: built a user persona and journey map, benchmarked against competitors, and designed a differentiated feature set anchored by "Adjustment Mode", a non-judgmental way to recover from a missed study session. 
+Also extended the concept into FlowGuide, an AI-powered Telegram bot delivering personalized study insights.
